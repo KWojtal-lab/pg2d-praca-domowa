@@ -43,6 +43,12 @@ down={
 ]
 }
 
+[layer_names]
+
+2d_render/layer_1="Obstacles"
+2d_render/layer_2="Player"
+2d_render/layer_3="Enemy"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

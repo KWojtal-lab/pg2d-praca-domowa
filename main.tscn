@@ -2,12 +2,15 @@
 
 [ext_resource type="Script" uid="uid://c3ubxpp10k6x6" path="res://scripts/player.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://cjk6efoxo1xkr" path="res://scripts/enemy.gd" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://c7qje1amkc2tu" path="res://scripts/hurtbox.gd" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://cowmiy8p4s65y" path="res://scripts/hitbox.gd" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://bdwlk6xg0sr1o" path="res://scripts/health_points_label.gd" id="5_lquwl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ueyco"]
 size = Vector2(40, 40)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_4c57u"]
-size = Vector2(40, 40)
+[sub_resource type="CircleShape2D" id="CircleShape2D_ru2go"]
+radius = 40.1995
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
 size = Vector2(45, 337)
@@ -67,14 +70,18 @@ color = Color(0.07058824, 1, 1, 1)
 position = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_ueyco")
 
+[node name="HurtboxArea" type="Area2D" parent="Player" unique_id=1562163488]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("2_h2yge")
+
+[node name="HurtboxCollision" type="CollisionShape2D" parent="Player/HurtboxArea" unique_id=1913313747]
+shape = SubResource("CircleShape2D_ru2go")
+
 [node name="Enemy" type="CharacterBody2D" parent="." unique_id=1538247996]
 position = Vector2(953, 96)
 collision_layer = 4
 script = ExtResource("2_0xm2m")
-
-[node name="ShapeCast2D" type="ShapeCast2D" parent="Enemy" unique_id=178986882]
-shape = SubResource("RectangleShape2D_4c57u")
-target_position = Vector2(0, 0)
 
 [node name="Background" type="ColorRect" parent="Enemy" unique_id=956753051]
 anchors_preset = 8
@@ -92,6 +99,14 @@ color = Color(0.96141356, 0.025140641, 3.85046e-07, 1)
 
 [node name="Collision" type="CollisionShape2D" parent="Enemy" unique_id=725106080]
 shape = SubResource("RectangleShape2D_ueyco")
+
+[node name="HitboxArea" type="Area2D" parent="Enemy" unique_id=587918685]
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("4_1bvp3")
+
+[node name="HitboxCollision" type="CollisionShape2D" parent="Enemy/HitboxArea" unique_id=1976807830]
+shape = SubResource("CircleShape2D_ru2go")
 
 [node name="Obstacles" type="Node2D" parent="." unique_id=1438487316]
 
@@ -236,3 +251,20 @@ collision_mask = 0
 position = Vector2(619, -352)
 rotation = 1.5707964
 shape = SubResource("RectangleShape2D_kek77")
+
+[node name="Screen" type="CanvasLayer" parent="." unique_id=339200445]
+
+[node name="HealthPointsLabel" type="Label" parent="Screen" unique_id=2070073586]
+anchors_preset = -1
+anchor_right = 0.21200001
+anchor_bottom = 0.15900001
+offset_right = -0.22401428
+offset_bottom = -0.03200531
+theme_override_font_sizes/font_size = 50
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("5_lquwl")
+
+[connection signal="damage_taken" from="Player/HurtboxArea" to="Screen/HealthPointsLabel" method="update_health_points"]
+[connection signal="area_entered" from="Enemy/HitboxArea" to="Enemy/HitboxArea" method="_on_area_entered"]

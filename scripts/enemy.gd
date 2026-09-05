@@ -9,6 +9,10 @@ const CURRENT_DIR_ADVANTAGE_MULTIPLIER = 1.5
 @onready var player: Node2D = get_tree().current_scene.get_node("Player")
 
 func _physics_process(_delta: float) -> void:
+	if not is_instance_valid(player):
+		velocity = Vector2.ZERO
+		return
+	
 	var dir_to_player = global_position.direction_to(player.global_position)
 	
 	if not test_move(global_transform, dir_to_player * CHECK_DIST):

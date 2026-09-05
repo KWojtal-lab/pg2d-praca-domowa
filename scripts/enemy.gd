@@ -12,8 +12,7 @@ func _physics_process(_delta: float) -> void:
 		var best_dir = Vector2.ZERO
 		var best_score = float("-inf")
 		
-		var test_degrees = range(-90, 90 + 1, 30)
-		for degree in test_degrees:
+		for degree in range(-180, 180 + 1, 15):
 			var candidate = dir.rotated(deg_to_rad(degree))
 			var score = candidate.dot(dir) if not test_move(global_transform, candidate) else float("-inf")
 			
